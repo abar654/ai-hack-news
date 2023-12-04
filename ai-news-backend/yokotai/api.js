@@ -148,6 +148,26 @@ const getAllMessages = async (chatId) =>{
   return response.data;
 }
 
+const waitDocument = async (docId) => {
+  var documentParsed = false;
+  const accessToken = await getAccessToken();
+  while (!documentParsed){
+    const doc = await axios.get(`${process.env.API_URL}/documents/${docId}?raw=true`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }).toJSON();
+    if (doc["raw_text"]!==""){
+      documentParsed = true;
+    }
+    else {
+      // Sleep for 1 second
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+
+  return response.data;
+}
 
 module.exports = {
     getDocuments,
@@ -160,6 +180,7 @@ module.exports = {
     getAllMessages,
     addDocument,
     getTags,
-    addTag
+    addTag,
+    waitDocument,
 };  
 
