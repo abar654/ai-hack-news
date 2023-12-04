@@ -1,4 +1,4 @@
-const {addTag, addDocument, getDocuments, getChat, createChat, updateChat, deleteChat, getChats, getAllMessages, createMessage} = require('./yokotai/api');
+const {addTag, addDocument, getDocument, getDocuments, getChat, createChat, updateChat, deleteChat, getChats, getAllMessages, createMessage} = require('./yokotai/api');
 
 
 const test_url = "https://www.tilannehuone.fi/halytys.php";
@@ -12,6 +12,8 @@ async function makeNew(url, topic, language='finnish'){
     try {
         const newDoc = await addDocument(tagId, url);
         console.log(newDoc);
+        const waitDoc = await getDocument(newDoc.id);
+        console.log(waitDoc);
     } catch (e) {
         console.log("Error in addDoc: ", Object.keys(e));
     }
