@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
+import GeneratorForm from './GeneratorForm/GeneratorForm';
+import GeneratorResult from './GeneratorResult/GeneratorResult';
+import { GeneratorOptions, generateNews } from './api/api';
 
 function App() {
 
-    const [data, setData] = useState(null);
+    const [data, setData] = useState<string | null>(null);
 
-    useEffect(() => {
-        fetch('/test')
-            .then((res) => res.json())
-            .then((data) => setData(data));
-    }, []);
+    const onSubmit = async (options: GeneratorOptions) => {
+        setData("Loading...");
+        const data = await generateNews(options);
+        setData(data.message);
+    };
 
     return (
         <div className="App">
-            {data ? (
-                <div>
-                    {JSON.stringify(data)}
-                </div>
-            ) : (
-                <p>Loading...</p>
-            )}
+            <h1>News Generator</h1>
+            <GeneratorForm onSubmit={onSubmit}/>
+            <GeneratorResult result={data}/>
         </div>
     );
 }
