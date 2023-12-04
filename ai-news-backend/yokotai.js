@@ -1,9 +1,6 @@
 const {addTag, addDocument, getDocument, getDocuments, getChat, createChat, updateChat, deleteChat, getChats, getAllMessages, createMessage, waitDocument} = require('./yokotai/api');
 
-
-const test_url = "https://www.tilannehuone.fi/halytys.php";
-
-async function makeNew(url, topic, language='finnish'){
+const makeNew = async (url, topic, language='finnish') => {
 
     const newTag = await addTag("catbot-" + Date.now());
     console.log(newTag);
@@ -25,8 +22,11 @@ async function makeNew(url, topic, language='finnish'){
     const message = await createMessage(newChat.id, topic);
     //console.log(message);
     const messages = await getAllMessages(newChat.id);
-    console.log(messages);
+    
 
+    return messages[1].content;
 };
 
-makeNew(test_url, "Listaa tämän päivän palohälytykset");
+module.exports = {
+    makeNew
+};

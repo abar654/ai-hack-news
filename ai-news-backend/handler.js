@@ -1,3 +1,5 @@
+const makeNew = require("./yokotai").makeNew;
+
 const notFound = (response) => {
     // Send not found response
     response.writeHead(404, {"Content-Type": "application/json"});
@@ -15,19 +17,21 @@ const handler = (request, response) => {
         request.on("data", (chunk) => {
             body.push(chunk);
         }).on("end", () => {
-            body = Buffer.concat(body).toString();
+            body = JSON.parse(Buffer.concat(body).toString());
             console.log(body);
 
             // Add generate endpoint
             if (url === "/generate") {
-                response.writeHead(200, {"Content-Type": "application/json"});
-                response.write(JSON.stringify({ message: "Hello from the other side"}));
-                response.end();
+                makeNew(body.sourceUrl, body.topic).then((message) => {
+                    response.writeHead(200, {"Content-Type": "application/json"});
+                    response.write(JSON.stringify({ message }));
+                    response.end();
+                    return;
+                });
+            } else {
+                notFound(response);
                 return;
             }
-
-            notFound(response);
-            return;
         });
         return;
     }

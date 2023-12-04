@@ -9,6 +9,7 @@ function App() {
     const [data, setData] = useState<string | null>(null);
 
     const onSubmit = async (options: GeneratorOptions) => {
+        setData("Loading...");
         const data = await generateNews(options);
         setData(data.message);
     };
