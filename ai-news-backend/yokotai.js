@@ -1,4 +1,4 @@
-const {addTag, addDocument, getDocument, getDocuments, getChat, createChat, updateChat, deleteChat, getChats, getAllMessages, createMessage} = require('./yokotai/api');
+const {addTag, addDocument, getDocument, getDocuments, getChat, createChat, updateChat, deleteChat, getChats, getAllMessages, createMessage, waitDocument} = require('./yokotai/api');
 
 
 const test_url = "https://www.tilannehuone.fi/halytys.php";
@@ -9,21 +9,18 @@ async function makeNew(url, topic, language='finnish'){
     console.log(newTag);
 
     const tagId = newTag.id;
-    try {
-        const newDoc = await addDocument(tagId, url);
-        console.log(newDoc);
-        const waitDoc = await getDocument(newDoc.id);
-        console.log(waitDoc);
-    } catch (e) {
-        console.log("Error in addDoc: ", Object.keys(e));
-    }
-    //const documents = await getDocuments();
-    //console.log(documents);
-    const newChat = await createChat("CatBot"+Date.now(), [newTag.id]);
-    //console.log(newChat);
+    
+    const newDoc = await addDocument(tagId, url);
+    console.log(newDoc);
 
-    const chat = await getChat(newChat.id);
-    //console.log(chat);
+
+    const docReady = await waitDocument(newDoc.id);
+
+    const newChat = await createChat("CatBotChat"+Date.now(), [newTag.id]);
+    console.log(newChat);
+
+    // const chat = await getChat(newChat.id);
+    // //console.log(chat);
 
     const message = await createMessage(newChat.id, topic);
     //console.log(message);
