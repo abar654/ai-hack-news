@@ -7,7 +7,7 @@ services:
     image: backend_image
     build: ./ai-news-backend
     expose:
-      - "5000"
+      - "8083"
     networks: 
       - app_network
 
